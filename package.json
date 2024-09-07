@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Template to develop node express backend",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "dev": "nodemon src/index.js"
   },
@@ -17,6 +18,8 @@
     "mongoose": "^8.6.1"
   },
   "devDependencies": {
-    "nodemon": "^3.1.4"
+    "@types/node": "^22.5.4",
+    "nodemon": "^3.1.4",
+    "prettier": "^3.3.3"
   }
 }

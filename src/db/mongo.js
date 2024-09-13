@@ -1,7 +1,5 @@
-import dotenv from 'dotenv'
 import mongoose from "mongoose"
 
-dotenv.config()
 const connectDB = async () => {
     try {
         const connectionInstance = await mongoose.connect(`${process.env.MONGO_URI}/${process.env.DB_NAME}`)

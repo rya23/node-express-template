@@ -6,7 +6,6 @@ import { ApiResponse } from "../utils/apiResponse.js"
 
 const registerUser = asyncHandler(async (req, res) => {
     const { username, email, fullname, password } = req.body
-
     if (
         [username, email, fullname, password].some(
             (field) => field?.trim === ""
@@ -15,14 +14,14 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new ApiError(400, "All values are Required")
     }
 
-    const existedUser = User.findOne({ $or: [{ username }, { email }] })
-    if (!existedUser) {
+    const existedUser = await User.findOne({ $or: [{ username }, { email }] })
+    if (existedUser) {
         throw new ApiError(409, "User with email or username already Exists")
     }
-
-    const profilePicLocalPath = req.files?.profilepic[0]?.path
+    const profilePicLocalPath = req.file?.path
+    console.table(req.file)
     if (!profilePicLocalPath) {
-        throw new ApiError(400, "ProfilePic is Required")
+        throw new ApiError(400, "ProfilePic is Required local")
     }
     const profilepic = await uploadOnCloudinary(profilePicLocalPath)
 
@@ -37,7 +36,7 @@ const registerUser = asyncHandler(async (req, res) => {
         password,
         username: username.toLowerCase(),
     })
-    const createdUser = User.findById(user._id).select(
+    const createdUser = await User.findById(user._id).select(
         "-password -refreshToken"
     )
 

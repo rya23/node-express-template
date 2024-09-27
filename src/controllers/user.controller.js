@@ -21,7 +21,7 @@ const generateAccessandRefreshToken = async (userId) => {
 }
 
 const registerUser = asyncHandler(async (req, res) => {
-    const { username, email, fullname, password } = req.body
+    const { username, email, fullname, password, role } = req.body
     if (
         [username, email, fullname, password].some(
             (field) => field?.trim === ""
@@ -49,6 +49,7 @@ const registerUser = asyncHandler(async (req, res) => {
         profilepic: profilepic.url,
         email,
         password,
+        role,
         username: username.toLowerCase(),
     })
     const createdUser = await User.findById(user._id).select(
@@ -130,4 +131,15 @@ const logoutUser = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, {}, "User Logged Out Successfully"))
 })
 
-export { registerUser, loginUser, logoutUser }
+const getAllUsers = asyncHandler(async (req, res) => {
+    try {
+        const users = await User.find()
+        return res
+            .status(200)
+            .json(new ApiResponse(200, users, "List of users"))
+    } catch (error) {
+        throw new ApiError(500, "Server Error")
+    }
+})
+
+export { registerUser, loginUser, logoutUser, getAllUsers }
